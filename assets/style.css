@@ -1,0 +1,40 @@
+/* Color and Spacing Variables */
+:root {
+    --light: #e6e5ec;
+    --medium: #867fa0;
+    --dark: #0d0042;
+}
+/* Body/Global Styles START */
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+body {
+    background-color: var(--light);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: var(--dark);
+}
+body a {
+    text-decoration: none;
+    color: inherit;
+}
+/* Body/Global Styles END */
+/* Header Styles START */
+header {
+    display: flex;
+    padding: 30px 45px;
+    background-color: var(--dark);
+    color: var(--light);
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Cinzel', serif;
+}
+header h1 {s
+    font-size: 36px;
+    text-align: center;
+    font-weight: 700;
+}
+/* Header Styles END */
