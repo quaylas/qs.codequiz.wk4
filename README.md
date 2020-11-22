@@ -2,7 +2,7 @@
 
 For this week's challenge, we created a timed quiz on JS Fundamentals. The quiz allows users to store their high scores and see them over time. 
 
-The quiz can be accessed live [here](INSERT REPOSITORY LINK).
+The quiz can be accessed live [here](https://quaylas.github.io/qs.codequiz.wk4/).
 
 Table of Contents
 * [User Story and Acceptance Criteria](#user-story-and-acceptance-criteria)
