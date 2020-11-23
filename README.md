@@ -57,20 +57,14 @@ THEN I can save my initials and score
 
 ---
 ## Images
-### Desktop View
+### Welcome Screen
 
-1440px X 1112px
+![Image of welcome screen](./assets/images/welcomeScreen.png)
 
-![Image of desktop view](./assets/images/DesktopView.png)
+### Question Screen
 
-### iPad View
+![Image of question screen](./assets/images/questionScreen.png)
 
-768px X 1024px
+### High Scores Screen
 
-![Image of iPad view](./assets/images/iPadView.png)
-
-### iPhone 6 View
-
-375px X 667px
-
-![Image of iPhone 6 view](./assets/images/iPhone6View.png)
+![Image of high scores screen](./assets/images/highScoreScreen.png)

@@ -121,6 +121,8 @@ footer {
     padding: 30px 45px;
     width: 100%;
     background-color: var(--medium);
+    position: fixed;
+    bottom: 0;
 }
 footer h5 {
     display: flex;
