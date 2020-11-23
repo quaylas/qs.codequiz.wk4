@@ -53,25 +53,39 @@ const questions = [
 ]
 
 // Retrieve variables from document
-var bodyEl = document.querySelectorAll("body");
 var quizHeaderEl = document.querySelector(".secondary-header");
 var quizContentEl = document.querySelector(".quiz-content");
 var startButtonEl = document.querySelector("#start");
-
+var submitFormEl = document.querySelector(".submit-score");
+var submitButtonEl = document.querySelector("#submit");
+var showHighScoresEl = document.querySelector("#showHighScores");
 
 // create question containers
 var questionTextEl = document.createElement("h3");
 quizContentEl.appendChild(questionTextEl);
 var questionAnswersEl = document.createElement("ul");
 
-// Set quiz time limit, starting question and initial score
+// Set quiz time limit, starting question, initial score, and high scores
 var timeLeft = 90;
 var score = 0;
 var questionIndex = 0;
+highScores = [];
+
+// Function to start quiz
+var startQuiz = function (){
+    timer();
+    // insert question
+    nextQuestion(questions, questionIndex);
+};
 
 // function to create and display timer
-var startTimer = setInterval(function(){
-        if (timeLeft > 1){
+var timer = function(){
+    // create countdown effect using setInterval
+    var countdown = setInterval(function(){
+        if (questionIndex >= questions.length){
+            clearInterval(countdown);
+        }
+        else if (timeLeft > 1){
             quizHeaderEl.textContent = "Time Remaining: " + timeLeft + " seconds.";
             timeLeft--;
         }
@@ -80,70 +94,10 @@ var startTimer = setInterval(function(){
             timeLeft--;
         }
         else {
-            clearInterval(startTimer);
+            clearInterval(countdown);
             endQuiz();
         }
-    }, 1000);
-
-var stopTimer = function() {
-    clearInterval(startTimer);
-};
-
-// function to end quiz
-var endQuiz = function(){
-    // clear previous question content
-    quizContentEl.innerHTML = "";
-    questionAnswersEl.innerHTML = "";
-    stopTimer();
-    quizHeaderEl.innerHTML= "";
-
-    // if time has expired, display that in the secondary header
-    if (timeLeft === 0){
-        quizHeaderEl.textContent = "Time has expired!";
-        console.log("quiz ended because time expired");
-    }
-
-    // if all questions were answered, display that in the secondary header
-    else {
-        quizHeaderEl.textContent = "You've completed all questions!";
-        console.log("quiz ended because all questions were answered");
-    }
-
-    // display the player's score and prompt them to enter their name
-};
-
-var checkAnswer = function() {
-    // detect selected answer and pull its ID
-    var userChoice = event.target;
-    var choiceId = userChoice.getAttribute("data-choiceId");
-
-    // pull correct answer from questions array
-    var correctAnswer = questions[questionIndex].correctAnswer;
-
-    // increment the score for a correct answer
-    if (choiceId === correctAnswer){
-        console.log(`${choiceId} is the right answer!`);
-        score++;
-    }
-    // apply a time penalty of -10s for an incorrect answer
-    else {
-        console.log(`That's incorrect. The correct answer was ${correctAnswer}`);
-        timeLeft = timeLeft - 5;
-    }
-
-    // increment the question index
-    questionIndex++;
-
-    // if there are still questions remaining, display the next question
-    if (questionIndex < questions.length) {
-        console.log(questionIndex, questions[questionIndex]);
-        nextQuestion(questions, questionIndex);
-    }
-    // if there are no questions remaining, end the quiz
-    else {
-        console.log("the quiz has ended");
-        endQuiz();
-    }
+    }, 1000)
 };
 
 // insert question, wait for an answer to be selected, and check the answer
@@ -185,14 +139,134 @@ var nextQuestion = function (questionArray, questionIndex){
     document.querySelectorAll(".answer-choice").forEach(item => {item.addEventListener("click", checkAnswer)});
 };
 
-// Function to start quiz
-var startQuiz = function (){
-    // Start startTimer
-    startTimer;
-    // insert question
-    nextQuestion(questions, questionIndex);
+var checkAnswer = function() {
+    // detect selected answer and pull its ID
+    var userChoice = event.target;
+    var choiceId = userChoice.getAttribute("data-choiceId");
+
+    // pull correct answer from questions array
+    var correctAnswer = questions[questionIndex].correctAnswer;
+
+    // increment the score for a correct answer
+    if (choiceId === correctAnswer){
+        console.log(`${choiceId} is the right answer!`);
+        score++;
+    }
+    // apply a time penalty of -10s for an incorrect answer
+    else {
+        console.log(`That's incorrect. The correct answer was ${correctAnswer}`);
+        timeLeft = timeLeft - 5;
+    }
+
+    // increment the question index
+    questionIndex++;
+
+    // if there are still questions remaining, display the next question
+    if (questionIndex < questions.length) {
+        console.log(questionIndex, questions[questionIndex]);
+        nextQuestion(questions, questionIndex);
+    }
+    // if there are no questions remaining, end the quiz
+    else {
+        console.log("the quiz has ended");
+        endQuiz();
+    }
 };
 
+// function to end quiz and display appropriate messages
+var endQuiz = function(){
+    // clear previous question content
+    quizContentEl.innerHTML = "";
+    questionAnswersEl.innerHTML = "";
+    quizHeaderEl.innerHTML= "";
+    // if time has expired, display that in the secondary header
+    if (timeLeft === 0){
+        quizHeaderEl.textContent = "Time has expired!";
+        console.log("quiz ended because time expired");
+    }
+
+    // if all questions were answered, display that in the secondary header
+    else {
+        quizHeaderEl.textContent = "You've completed all questions!";
+        console.log("quiz ended because all questions were answered");
+    }
+
+    // display the player's score and prompt them to enter their name
+    var endMessage = document.createElement("p");
+    endMessage.textContent = `Your final score is  ${score} out of ${questions.length}! You finished with ${timeLeft} seconds left on the clock.`; 
+    quizContentEl.appendChild(endMessage);
+
+    submitFormEl.setAttribute("style", "display:block");
+    
+};
+
+// function to retrieve high scores
+var getHighScores = function(){
+    var retrievedScores = localStorage.getItem("highScores");
+    if (!retrievedScores){
+        highScores = [];
+    }
+    else {
+        highScores = JSON.parse(retrievedScores);
+    }
+    // return highScores;
+}
+
+// function to save score
+var saveScore = function() {
+    event.preventDefault();
+    var initials = document.querySelector('#userInitials').value;
+    if (initials === ''){
+        alert('You must enter your initials!');
+    }
+    else {
+        var newScorePair = {
+            userInitials: initials,
+            userScore: score
+        };
+        getHighScores();
+        highScores.push(newScorePair);
+        localStorage.setItem("highScores", JSON.stringify(highScores));
+        printHighScores();
+    }
+    
+};
+
+// function to sort scores 
+var sortHighScores = function() {
+    getHighScores();
+    var compare = function(a, b) {
+        const scoreA = a.userScore;
+        const scoreB = b.userScore;
+
+        let comparison = 0;
+        if (scoreA < scoreB){
+            comparison = 1;
+        }
+        else if (scoreA >= scoreB){
+            comparison = -1;
+        }
+        return comparison;
+    }
+    highScores.sort(compare);
+}
+
+// function to print scores
+var printHighScores = function() {
+    sortHighScores();
+    quizHeaderEl.textContent = "High Scores";
+    quizContentEl.innerHTML = "";
+    submitFormEl.setAttribute("style","display:none");
+    var highScoreList = document.createElement("ol");
+    for(var i = 0; i < highScores.length; i++){
+        var newScoreListItem = document.createElement("li");
+        newScoreListItem.textContent = `${highScores[i].userInitials} with a score of ${highScores[i].userScore}`;
+        highScoreList.appendChild(newScoreListItem);
+    }
+    quizContentEl.appendChild(highScoreList);
+}
 
 // execute startQuiz when the START button is clicked
 startButtonEl.addEventListener("click", startQuiz);
+submitButtonEl.addEventListener("click", saveScore);
+showHighScoresEl.addEventListener("click", printHighScores);
