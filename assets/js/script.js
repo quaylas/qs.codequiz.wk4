@@ -59,6 +59,8 @@ var startButtonEl = document.querySelector("#start");
 var submitFormEl = document.querySelector(".submit-score");
 var submitButtonEl = document.querySelector("#submit");
 var showHighScoresEl = document.querySelector("#showHighScores");
+var answerCorrectEl = document.querySelector("#answer-correct");
+var answerIncorrectEl = document.querySelector("#answer-incorrect");
 
 // create question containers
 var questionTextEl = document.createElement("h3");
@@ -149,13 +151,15 @@ var checkAnswer = function() {
 
     // increment the score for a correct answer
     if (choiceId === correctAnswer){
-        console.log(`${choiceId} is the right answer!`);
+        var answerStatus = document.createElement("p");
+        answerCorrectEl.setAttribute("style","display:block");
+        quizContentEl.appendChild(answerStatus);
         score++;
     }
     // apply a time penalty of -10s for an incorrect answer
     else {
-        console.log(`That's incorrect. The correct answer was ${correctAnswer}`);
         timeLeft = timeLeft - 5;
+        answerIncorrectEl.setAttribute("style","display:block");
     }
 
     // increment the question index
@@ -163,16 +167,20 @@ var checkAnswer = function() {
 
     // if there are still questions remaining, display the next question
     if (questionIndex < questions.length) {
-        console.log(questionIndex, questions[questionIndex]);
+        setTimeout(hideIndicators, 200);
         nextQuestion(questions, questionIndex);
     }
     // if there are no questions remaining, end the quiz
     else {
-        console.log("the quiz has ended");
+        setTimeout(hideIndicators, 200);
         endQuiz();
     }
 };
-
+// function to hide answer status indicators
+var hideIndicators = function(){
+    answerCorrectEl.setAttribute("style","display:none");
+    answerIncorrectEl.setAttribute("style","display:none");
+}
 // function to end quiz and display appropriate messages
 var endQuiz = function(){
     // clear previous question content
@@ -182,13 +190,11 @@ var endQuiz = function(){
     // if time has expired, display that in the secondary header
     if (timeLeft === 0){
         quizHeaderEl.textContent = "Time has expired!";
-        console.log("quiz ended because time expired");
     }
 
     // if all questions were answered, display that in the secondary header
     else {
         quizHeaderEl.textContent = "You've completed all questions!";
-        console.log("quiz ended because all questions were answered");
     }
 
     // display the player's score and prompt them to enter their name
