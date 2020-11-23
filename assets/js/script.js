@@ -66,7 +66,7 @@ quizContentEl.appendChild(questionTextEl);
 var questionAnswersEl = document.createElement("ul");
 
 // Set quiz time limit, starting question, initial score, and high scores
-var timeLeft = 90;
+var timeLeft = 60;
 var score = 0;
 var questionIndex = 0;
 highScores = [];
@@ -264,9 +264,19 @@ var printHighScores = function() {
         highScoreList.appendChild(newScoreListItem);
     }
     quizContentEl.appendChild(highScoreList);
+    var playAgainFormEl = document.createElement("form");
+    var playAgainBtnEl = document.createElement("button");
+    playAgainBtnEl.setAttribute("type", "submit");
+    playAgainBtnEl.textContent = "Play Again";
+    playAgainFormEl.appendChild(playAgainBtnEl);
+    quizContentEl.appendChild(playAgainFormEl);
 }
 
 // execute startQuiz when the START button is clicked
 startButtonEl.addEventListener("click", startQuiz);
+
+// save the user's score when they submit their initials
 submitButtonEl.addEventListener("click", saveScore);
+
+// show the high scores when requested
 showHighScoresEl.addEventListener("click", printHighScores);
