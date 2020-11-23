@@ -52,14 +52,21 @@ header h1 {
     font-weight: 700;
     padding-bottom: 15px;
 }
-.page-content {
-    padding: 20px 0;
-}
-.page-content p {
+.quiz-content p {
     padding: 10px 0;
 }
-
+.quiz-content ul {
+    list-style: none;
+}
+.quiz-content ul li {
+    color: var(--light);
+    padding: 15px 15px;
+    background: var(--dark);
+    border-radius: 12px;
+    margin: 8px auto;
+}
 .start-btn{
+    margin: 20px auto;
     outline: none;
     border: none;
     border-radius: 8px;
